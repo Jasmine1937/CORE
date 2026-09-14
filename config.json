@@ -1,0 +1,343 @@
+{
+  "data": {
+    "file": "panel.csv",
+    "id": "entity_id",
+    "year": "year",
+    "target": "target",
+    "zscore": "zscore",
+    "features": null
+  },
+  "output": "output",
+  "seed": 42,
+  "windows": {
+    "start_year": 2003,
+    "train_years": 5,
+    "count": 9,
+    "validation_years": 1,
+    "step_years": 1,
+    "final_years": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021
+    ]
+  },
+  "preprocessing": {
+    "lower_quantile": 0.01,
+    "upper_quantile": 0.99,
+    "smote_neighbors": 5,
+    "enn_neighbors": 3
+  },
+  "features": {
+    "xgb": {
+      "n_estimators": 100,
+      "max_depth": 6,
+      "learning_rate": 0.3,
+      "subsample": 1,
+      "colsample_bytree": 1,
+      "n_jobs": 4
+    },
+    "l1_c": 1
+  },
+  "gp": {
+    "variants": [
+      "G0",
+      "G1",
+      "G2"
+    ],
+    "population": 500,
+    "generations": 200,
+    "initial_depth": 5,
+    "tournament_size": 2,
+    "crossover_probability": 0.9,
+    "max_tree_length": 10000,
+    "parsimony_lambda": 0.02,
+    "tree_size_normalizer": 100.0,
+    "archive_size": 200
+  },
+  "core": {
+    "tree_size_max": 100,
+    "depth_max": 12,
+    "fallback_count": 20,
+    "z_one_se": 1.0,
+    "one_se_fallback_band": 0.005,
+    "guard_quantile": 0.8,
+    "guard_rate": 0.9,
+    "use_safety_guards": true,
+    "tier_low_quantile": 0.25,
+    "tier_high_quantile": 0.75,
+    "k_low": 3,
+    "k_mid": 3,
+    "k_high": 4,
+    "delta_mid": 0.01,
+    "delta_high": 0.005,
+    "stability_lambda": 1.0,
+    "shrinkage_nu": 2.0,
+    "std_weight": 0.7,
+    "worst_drop_weight": 0.3,
+    "structural_weight": 0.25,
+    "temporal_weight": 0.75,
+    "selection_budget": 3,
+    "minimum_new_coverage": 0.01,
+    "complexity_weights": {
+      "T": 1.0,
+      "D": 0.5,
+      "O": 0.5,
+      "U": 0.8,
+      "Nx": 1.5,
+      "G": 0.5,
+      "H": 0.5
+    },
+    "greedy_weights": {
+      "auc": 1.0,
+      "stability": 1.0,
+      "complexity": 0.5,
+      "coverage": 0.5
+    }
+  },
+  "baselines": {
+    "models": [
+      "zscore",
+      "lr",
+      "lda",
+      "dt",
+      "rf",
+      "xgb",
+      "ngb",
+      "mlp",
+      "tabnet"
+    ],
+    "search_spaces": {
+      "zscore": {},
+      "lr": {
+        "C": [
+          0.0001,
+          0.001,
+          0.01,
+          0.1,
+          1,
+          10
+        ]
+      },
+      "lda": {
+        "shrinkage": [
+          null,
+          "auto",
+          0.1,
+          0.5,
+          0.9
+        ]
+      },
+      "dt": {
+        "max_depth": [
+          6,
+          10,
+          null
+        ],
+        "min_samples_leaf": [
+          5,
+          10,
+          20
+        ]
+      },
+      "rf": {
+        "n_estimators": [
+          20,
+          100,
+          200
+        ],
+        "max_depth": [
+          6,
+          10,
+          null
+        ],
+        "min_samples_leaf": [
+          1,
+          10
+        ]
+      },
+      "xgb": {
+        "n_estimators": [
+          40,
+          150,
+          200
+        ],
+        "max_depth": [
+          4,
+          8
+        ],
+        "learning_rate": [
+          0.05,
+          0.3
+        ]
+      },
+      "ngb": {
+        "n_estimators": [
+          100,
+          200
+        ],
+        "learning_rate": [
+          0.01,
+          0.03
+        ],
+        "minibatch_frac": [
+          0.5,
+          1.0
+        ]
+      },
+      "mlp": {
+        "hidden_layer_sizes": [
+          [
+            50
+          ],
+          [
+            100
+          ],
+          [
+            100,
+            50
+          ]
+        ],
+        "alpha": [
+          0.0001,
+          0.001,
+          0.01
+        ],
+        "learning_rate_init": [
+          0.0001,
+          0.001
+        ]
+      },
+      "tabnet": [
+        {
+          "n_d": [
+            8
+          ],
+          "n_a": [
+            8
+          ],
+          "n_steps": [
+            3,
+            5
+          ]
+        },
+        {
+          "n_d": [
+            16
+          ],
+          "n_a": [
+            16
+          ],
+          "n_steps": [
+            3,
+            5
+          ]
+        }
+      ]
+    },
+    "settings": {
+      "zscore": {
+        "estimator": {},
+        "fit": {}
+      },
+      "lr": {
+        "estimator": {
+          "penalty": "l2",
+          "solver": "lbfgs",
+          "max_iter": 1000
+        },
+        "fit": {}
+      },
+      "lda": {
+        "estimator": {
+          "solver": "lsqr"
+        },
+        "fit": {}
+      },
+      "dt": {
+        "estimator": {},
+        "fit": {}
+      },
+      "rf": {
+        "estimator": {
+          "n_jobs": 4
+        },
+        "fit": {}
+      },
+      "xgb": {
+        "estimator": {
+          "subsample": 0.8,
+          "colsample_bytree": 0.8,
+          "reg_lambda": 1,
+          "objective": "binary:logistic",
+          "eval_metric": "auc",
+          "n_jobs": 4,
+          "verbosity": 0
+        },
+        "fit": {}
+      },
+      "ngb": {
+        "estimator": {
+          "col_sample": 0.8,
+          "natural_gradient": true,
+          "verbose": false
+        },
+        "fit": {}
+      },
+      "mlp": {
+        "estimator": {
+          "activation": "relu",
+          "solver": "adam",
+          "batch_size": 128,
+          "max_iter": 500,
+          "early_stopping": false
+        },
+        "fit": {}
+      },
+      "tabnet": {
+        "estimator": {
+          "device_name": "cpu",
+          "verbose": 0
+        },
+        "fit": {
+          "eval_metric": [
+            "auc"
+          ],
+          "max_epochs": 80,
+          "patience": 10,
+          "batch_size": 4096,
+          "virtual_batch_size": 256,
+          "num_workers": 0,
+          "drop_last": false
+        }
+      }
+    }
+  },
+  "sensitivity": {
+    "count": 300,
+    "design_seed": 2026090107,
+    "design_attempts": 32,
+    "weight_factor_range": [
+      0.25,
+      4
+    ],
+    "lambda_range": [
+      1,
+      4
+    ],
+    "nu_range": [
+      0.5,
+      6
+    ],
+    "std_weight_range": [
+      0.5,
+      0.9
+    ],
+    "temporal_weight_range": [
+      0.5,
+      0.9
+    ],
+    "alpha": 0.05
+  }
+}
